@@ -1,4 +1,4 @@
-# tree-for-me
+# Tree for Me
 
 CSE 5914 - Capstone
 
