@@ -3,19 +3,38 @@
   <head>
     <meta charset='utf-8'>
     <link rel='icon' href='favicon.ico' type='image/x-icon'>
+    <link rel='stylesheet' href='site.css'>
+    
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
     <script src="site.js" defer></script>
     <title>Tree For Me</title>
   </head>
   
   <body>
-    <h1>Tree for Me</h1>
-    <p>Tree for Me is a plant finder designed to find the perfect plant for your wants, needs, and environmental conditions.</p>
-    <div style="width:700px;height:300px;line-height:2em;overflow:auto;padding:5px;border-style: solid;" id="chatlog">
-    </div>
-    
-    <input type="text" id="messageEntry" style="width: 250px">
-    <button type="button" id="messageButton">Submit</button>
-    
+	<div class="d-flex h-100 p-3 mx-auto flex-column">
+		<div style="position: absolute;top: 0px;left: 0px;height: auto; width: auto; max-width: 50px;">
+			<img src="tree-modern-green.png" class="ribbon" style="height: auto; width: auto; max-width: 100px;"/>
+		</div>
+	
+		<header class="masthead mb-auto" style="background-color: #389002">
+			<div class="inner">
+				<h3 class="masthead-brand">Tree for Me</h3>
+				<nav class="nav nav-masthead justify-content-center">
+					<a class="nav-link active" href="#">Home</a>
+					<a class="nav-link active" href="#">Profile</a>
+				</nav>
+				
+			</div>
+		</header>
+		<p>Tree for Me is a plant finder designed to find the perfect plant for your wants, needs, and environmental conditions.</p>
+		<div style="width:700px;height:300px;line-height:2em;overflow:auto;padding:5px;border-style: solid;margin:auto;" id="chatlog">
+		</div>
+
+		<input type="text" id="messageEntry" class="form-control" style="margin:auto;padding-top:15px" placeholder="Chat with the TFM plant suggester">
+		<button type="button" class="btn btn-success" id="messageButton">Submit</button>
+	</div>
   </body>
   
 </html>
