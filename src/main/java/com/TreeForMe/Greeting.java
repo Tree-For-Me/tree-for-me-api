@@ -14,9 +14,11 @@ public class Greeting {
         this.id = id;
         DiscoveryService disc = DiscoveryService.getInstance();
         List<String> keywords = new ArrayList<>();
-        keywords.add("humidity");
-        keywords.add("aloe");
-        this.content = disc.getDocTitleFromKeywordSearch(keywords);
+        keywords.add("bright indirect");
+        keywords.add("flowers");
+        keywords.add("humid");
+        keywords.add("fern");
+        this.content = disc.getPlantNameFromKeywordSearch(keywords);
     }
 
     public long getId() {

@@ -48,7 +48,7 @@ public final class DiscoveryService {
         return queryResponse.getResults();
     }
 
-    public String getDocTitleFromKeywordSearch(List<String> keywords) {
+    public String getPlantNameFromKeywordSearch(List<String> keywords) {
         // Build query
         StringBuilder query = new StringBuilder();
         for(String kw:keywords) {
@@ -76,7 +76,24 @@ public final class DiscoveryService {
             bestResult = qrs.get(resultIndex);
         }
 
-        return (String)((AbstractMap)bestResult.get("extracted_metadata")).get("title");
+        String title = (String)((AbstractMap)bestResult.get("extracted_metadata")).get("title");
+
+        int careIdx = title.indexOf("Care");
+        int picIdx = title.indexOf("Picture");
+        int cutIdx = 0;
+        if(careIdx != -1 && picIdx != -1) {
+            cutIdx = Integer.min(careIdx, picIdx) - 1;
+        }
+        else if(careIdx == -1 && picIdx == -1) {
+            cutIdx = title.length();
+        }
+        else {
+            cutIdx = Integer.max(careIdx, picIdx) - 1;
+        }
+
+        String plantName = title.substring(0, cutIdx);
+
+        return plantName;
     }
 
     public static DiscoveryService getInstance() {
