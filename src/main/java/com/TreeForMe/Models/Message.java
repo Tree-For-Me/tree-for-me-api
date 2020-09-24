@@ -6,8 +6,6 @@ public class Message {
 
     private String messageContent;
     private String user;
-    private int messageCounter = 0;
-    private String[] mockMessages = {};
 
     public Message(String messageContent, String user) {
         this.messageContent = messageContent;
