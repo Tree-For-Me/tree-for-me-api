@@ -15,7 +15,7 @@ public class MessageController {
 
     @GetMapping("/getHumidityMessage")
     public Message getHumidityMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
-        return new Message("How humid is the area in which you'd like the plant to live?", name);
+        return new Message("Is your area humid or dry?", name);
     }
 
     @GetMapping("/getWaterMessage")
@@ -30,11 +30,21 @@ public class MessageController {
 
     @GetMapping("/getSunMessage")
     public Message getSunMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
-        return new Message("Towards which direction does your window face, North?", name);
+        return new Message("What kind of sun does your space get?", name);
     }
 
     @GetMapping("/getSizeMessage")
     public Message getSizeMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
         return new Message("Would you lke a large, medium, or small-sized plant?", name);
+    }
+
+    @GetMapping("/getPlantTypeMessage")
+    public Message getSizeMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
+        return new Message("Do you have any idea what kind of plant you want?", name);
+    }
+
+    @GetMapping("/getFlowersMessage")
+    public Message getSizeMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
+        return new Message("Would you like your plant to have flowers or no flowers?", name);
     }
 }
