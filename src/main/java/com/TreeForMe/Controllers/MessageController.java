@@ -39,12 +39,12 @@ public class MessageController {
     }
 
     @GetMapping("/getPlantTypeMessage")
-    public Message getSizeMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
+    public Message getPlantTypeMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
         return new Message("Do you have any idea what kind of plant you want?", name);
     }
 
     @GetMapping("/getFlowersMessage")
-    public Message getSizeMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
+    public Message getFlowersMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
         return new Message("Would you like your plant to have flowers or no flowers?", name);
     }
 }
