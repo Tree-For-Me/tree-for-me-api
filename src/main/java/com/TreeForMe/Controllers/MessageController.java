@@ -30,7 +30,7 @@ public class MessageController {
 
     @GetMapping("/getSunMessage")
     public Message getSunMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
-        return new Message("Towards which direction does your window face?", name);
+        return new Message("Towards which direction does your window face, North?", name);
     }
 
     @GetMapping("/getSizeMessage")
