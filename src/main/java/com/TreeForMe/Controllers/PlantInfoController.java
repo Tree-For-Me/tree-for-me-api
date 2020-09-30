@@ -21,6 +21,7 @@ public class PlantInfoController {
         keywords.add(plantInfo.isFlowers()? "flowers" : "no flowers");
 
         String plantResult = DiscoveryService.getInstance().getPlantNameFromKeywordSearch(keywords);
+        System.out.println("plantResult: " + plantResult);
         Plant plant = new Plant(plantResult);
         return plant;
     }
