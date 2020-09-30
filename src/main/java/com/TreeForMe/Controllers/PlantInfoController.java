@@ -1,8 +1,7 @@
 package com.TreeForMe.Controllers;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.TreeForMe.Models.Plant;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -14,8 +13,7 @@ public class PlantInfoController {
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("discovery/getPlantSearchResult")
-    public String getPlantSearchResult(PlantInfo plantInfo) {
-
+    public Plant getPlantSearchResult(PlantInfo plantInfo) {
         ArrayList<String> keywords = new ArrayList<>();
         keywords.add(plantInfo.getFlowerType());
         keywords.add(plantInfo.isHumidity()? "humid" : "dry");
@@ -23,8 +21,8 @@ public class PlantInfoController {
         keywords.add(plantInfo.isFlowers()? "flowers" : "no flowers");
 
         String plantResult = DiscoveryService.getInstance().getPlantNameFromKeywordSearch(keywords);
-
-        return plantResult;
+        Plant plant = new Plant(plantResult);
+        return plant;
     }
 
 }

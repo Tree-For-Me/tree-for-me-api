@@ -9,7 +9,11 @@ public class PlantInfo {
     private boolean flowers;
     private boolean humidity;
 
-    public PlantInfo(String messageContent, String user) {
+    public PlantInfo(String flowerType, String light, boolean flowers, boolean humidity) {
+        this.flowerType = flowerType;
+        this.light = light;
+        this.flowers = flowers;
+        this.humidity = humidity;
     }
 
     public String getFlowerType() {
