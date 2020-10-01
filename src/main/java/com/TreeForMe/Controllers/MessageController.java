@@ -12,7 +12,7 @@ public class MessageController {
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/getPromptMessage")
     public Message getPromptMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
-        return new Message("How can I help you find a plant today?", name);
+        return new Message("Hello, welcome to Tree for Me! I’ll help you find the perfect plant for your environment.", name);
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
