@@ -24,6 +24,7 @@ public final class AssistantService {
         IamAuthenticator authenticator = new IamAuthenticator(apiKey);
         this.assistant = new Assistant(version, authenticator);
         this.assistant.setServiceUrl(serviceUrl);
+        this.createSession();
     }
 
     public createSession() {
