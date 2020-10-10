@@ -1,15 +1,10 @@
 package com.TreeForMe.Shared;
 
+import com.TreeForMe.Models.AssistantResponse;
 import com.ibm.cloud.sdk.core.security.Authenticator;
 import com.ibm.cloud.sdk.core.security.IamAuthenticator;
 import com.ibm.watson.assistant.v2.Assistant;
-import com.ibm.watson.assistant.v2.model.SessionResponse;
-import com.ibm.watson.assistant.v2.model.CreateSessionOptions;
-import com.ibm.watson.assistant.v2.model.DeleteSessionOptions;
-import com.ibm.watson.assistant.v2.model.MessageInput;
-import com.ibm.watson.assistant.v2.model.MessageOptions;
-import com.ibm.watson.assistant.v2.model.MessageResponse;
-import com.ibm.watson.assistant.v2.model.RuntimeResponseGeneric;
+import com.ibm.watson.assistant.v2.model.*;
 
 import com.TreeForMe.Models.Message;
 
@@ -17,8 +12,6 @@ import java.util.AbstractMap;
 import java.util.List;
 
 public final class AssistantService {
-
-    private static AssistantService assistantService;
 
     private Assistant assistant;
 
@@ -28,7 +21,7 @@ public final class AssistantService {
     private final String assistantID = "54c951c6-f58d-48c6-bb3d-ea2eed4b9453";
     private String sessionId;
 
-    private AssistantService() {
+    public AssistantService() {
         IamAuthenticator authenticator = new IamAuthenticator(apiKey);
         this.assistant = new Assistant(version, authenticator);
         this.assistant.setServiceUrl(serviceUrl);
@@ -47,37 +40,36 @@ public final class AssistantService {
         this.sessionId = "";
     }
 
-    public Message getResponse(Message userInput) {
+    public AssistantResponse getResponse(String userInput) {
         MessageInput input = new MessageInput.Builder()
                 .messageType("text")
-                .text(userInput.getMessageContent())
+                .text(userInput)
                 .build();
 
         MessageOptions options = new MessageOptions.Builder(this.assistantID, this.sessionId)
                 .input(input)
                 .build();
 
+        // send input to watson
         MessageResponse response = assistant.message(options).execute().getResult();
 
-        // This block is how the IBM walkthrough gets message text from this response
-        String responseText = "";
-        List<RuntimeResponseGeneric> responseGeneric = response.getOutput().getGeneric();
-        if(responseGeneric.size() > 0) {
-            if(responseGeneric.get(0).responseType().equals("text")) {
-                responseText = responseGeneric.get(0).text();
+        AssistantResponse ar = new AssistantResponse();
+
+        // extract returned messages
+        List<RuntimeResponseGeneric> responseGenerics = response.getOutput().getGeneric();
+        for(RuntimeResponseGeneric rrg : responseGenerics) {
+            if(rrg.responseType().equals("text")) {
+                ar.addMessage(rrg.text());
             }
         }
 
-        Message assistantResponse = new Message(responseText, "assistant");
-
-        return assistantResponse;
-    }
-
-    public static AssistantService getInstance() {
-        if (assistantService == null) {
-            assistantService = new AssistantService();
+        // extract returned intents
+        List<RuntimeIntent> intents = response.getOutput().getIntents();
+        for(RuntimeIntent ri : intents) {
+            ar.addIntent(ri.intent());
         }
 
-        return assistantService;
+        return ar;
     }
+
 }

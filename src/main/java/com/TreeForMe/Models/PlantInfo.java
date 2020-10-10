@@ -9,6 +9,13 @@ public class PlantInfo {
     private boolean flowers;
     private boolean humidity;
 
+    public PlantInfo() {
+        this.flowerType = "none";
+        this.light = "none";
+        this.flowers = false;
+        this.humidity = false;
+    }
+
     public PlantInfo(String flowerType, String light, boolean flowers, boolean humidity) {
         this.flowerType = flowerType;
         this.light = light;

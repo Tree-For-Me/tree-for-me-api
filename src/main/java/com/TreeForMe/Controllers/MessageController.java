@@ -1,7 +1,11 @@
 package com.TreeForMe.Controllers;
 
+import com.TreeForMe.Models.AssistantResponse;
 import com.TreeForMe.Models.Message;
+import com.TreeForMe.Models.PlantInfo;
 import com.TreeForMe.Shared.AssistantService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -9,14 +13,59 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @RestController
 public class MessageController {
 
+    Map<Integer, AssistantService> asMap = new HashMap<>();
+    Map<Integer, PlantInfo> plantMap = new HashMap<>();
+
+    private void extractPlantInfoFromIntents(int userid, List<String> intents) {
+        for(String intent : intents) {
+            //TODO: use intents to populate plant info values that make sense
+            if(intent.equals("high_humidity")) {
+                plantMap.get(userid).setHumidity(true);
+            }
+        }
+    }
+
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/getAssistantResponse")
-    public Message getAssistantResponse(Message userInput) {
-        Message response = AssistantService.getInstance().getResponse(userInput);
-        return response;
+    public ResponseEntity<Message> getAssistantResponse(Message userMessage) {
+        int userid;
+
+        // ensure user is an integer
+        try {
+            userid = Integer.parseInt(userMessage.getUser());
+        } catch(NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        if(userid == -1) {
+            // find a userid that doesn't already exist
+            do {
+                userid++;
+            } while(asMap.containsKey(userid));
+
+            // make a new assistant service session and new plantInfo object
+            asMap.put(userid, new AssistantService());
+            plantMap.put(userid, new PlantInfo());
+        }
+
+        // ensure userid is valid
+        if(!asMap.containsKey(userid)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        AssistantResponse ar = asMap.get(userid).getResponse(userMessage.getMessageContent());
+
+        String returnMessage = String.join("\n", ar.getMessages());
+        extractPlantInfoFromIntents(userid, ar.getIntents());
+
+        return ResponseEntity.ok(new Message(returnMessage, Integer.toString(userid)));
     }
 
     @CrossOrigin(origins = "http://localhost:4200")

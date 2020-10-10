@@ -1,5 +1,8 @@
 package com.TreeForMe;
 
+import com.TreeForMe.Models.AssistantResponse;
+import com.TreeForMe.Models.Message;
+import com.TreeForMe.Shared.AssistantService;
 import com.TreeForMe.Shared.DiscoveryService;
 
 import java.util.ArrayList;
@@ -12,13 +15,16 @@ public class Greeting {
 
     public Greeting(long id, String content) {
         this.id = id;
-        DiscoveryService disc = DiscoveryService.getInstance();
-        List<String> keywords = new ArrayList<>();
-        keywords.add("bright indirect");
-        keywords.add("flowers");
-        keywords.add("humid");
-        keywords.add("fern");
-        this.content = disc.getPlantNameFromKeywordSearch(keywords);
+
+        AssistantService as = new AssistantService();
+        AssistantResponse ar = as.getResponse("");
+        System.out.println(ar.getMessages());
+        System.out.println(ar.getIntents());
+        ar = as.getResponse("super dry");
+        System.out.println(ar.getMessages());
+        System.out.println(ar.getIntents());
+
+        this.content = "";
     }
 
     public long getId() {
