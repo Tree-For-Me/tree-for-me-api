@@ -1,6 +1,8 @@
 package com.TreeForMe.Controllers;
 
 import com.TreeForMe.Models.AssistantResponse;
+import com.TreeForMe.Models.AssistantResponse.Intent;
+import com.TreeForMe.Models.Conversation;
 import com.TreeForMe.Models.Message;
 import com.TreeForMe.Models.PlantInfo;
 import com.TreeForMe.Shared.AssistantService;
@@ -20,17 +22,7 @@ import java.util.Map;
 @RestController
 public class MessageController {
 
-    Map<Integer, AssistantService> asMap = new HashMap<>();
-    Map<Integer, PlantInfo> plantMap = new HashMap<>();
-
-    private void extractPlantInfoFromIntents(int userid, List<String> intents) {
-        for(String intent : intents) {
-            //TODO: use intents to populate plant info values that make sense
-            if(intent.equals("high_humidity")) {
-                plantMap.get(userid).setHumidity(true);
-            }
-        }
-    }
+    Map<Integer, Conversation> convos = new HashMap<>();
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/getAssistantResponse")
@@ -48,22 +40,19 @@ public class MessageController {
             // find a userid that doesn't already exist
             do {
                 userid++;
-            } while(asMap.containsKey(userid));
+            } while(convos.containsKey(userid));
 
             // make a new assistant service session and new plantInfo object
-            asMap.put(userid, new AssistantService());
-            plantMap.put(userid, new PlantInfo());
+            convos.put(userid, new Conversation());
         }
 
         // ensure userid is valid
-        if(!asMap.containsKey(userid)) {
+        if(!convos.containsKey(userid)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
-        AssistantResponse ar = asMap.get(userid).getResponse(userMessage.getMessageContent());
-
-        String returnMessage = String.join("\n", ar.getMessages());
-        extractPlantInfoFromIntents(userid, ar.getIntents());
+        AssistantResponse ar = AssistantService.getInstance().getResponse(userMessage.getMessageContent());
+        String returnMessage = convos.get(userid).handleResponse(ar);
 
         return ResponseEntity.ok(new Message(returnMessage, Integer.toString(userid)));
     }

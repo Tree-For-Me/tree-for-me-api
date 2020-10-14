@@ -5,27 +5,35 @@ import java.util.List;
 
 public class AssistantResponse {
 
-    private List<String> messages;
-    private List<String> intents;
+    public static class Intent {
+        private String name;
+        private double confidence;
+        public Intent(String name, double confidence) {
+            this.name = name;
+            this.confidence = confidence;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public double getConfidence() {
+            return this.confidence;
+        }
+
+    }
+
+    private List<Intent> intents;
 
     public AssistantResponse() {
-        this.messages = new ArrayList<>();
         this.intents = new ArrayList<>();
     }
 
-    public List<String> getMessages() {
-        return this.messages;
-    }
-
-    public void addMessage(String message) {
-        this.messages.add(message);
-    }
-
-    public List<String> getIntents() {
+    public List<Intent> getIntents() {
         return this.intents;
     }
 
-    public void addIntent(String intent) {
-        this.intents.add(intent);
+    public void addIntent(String name, double confidence) {
+        this.intents.add(new Intent(name, confidence));
     }
 }

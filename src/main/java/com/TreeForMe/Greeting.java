@@ -16,13 +16,12 @@ public class Greeting {
     public Greeting(long id, String content) {
         this.id = id;
 
-        AssistantService as = new AssistantService();
-        AssistantResponse ar = as.getResponse("");
-        System.out.println(ar.getMessages());
-        System.out.println(ar.getIntents());
-        ar = as.getResponse("super dry");
-        System.out.println(ar.getMessages());
-        System.out.println(ar.getIntents());
+        AssistantService as = AssistantService.getInstance();
+        AssistantResponse ar = as.getResponse("it is bright in here and very humid");
+        for(AssistantResponse.Intent intent : ar.getIntents()) {
+            System.out.println(intent.getName());
+            System.out.println(intent.getConfidence());
+        }
 
         this.content = "";
     }
