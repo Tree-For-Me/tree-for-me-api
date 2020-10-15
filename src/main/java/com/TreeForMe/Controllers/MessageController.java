@@ -31,7 +31,7 @@ public class MessageController {
 
         // ensure user is an integer
         try {
-            userid = Integer.parseInt(userMessage.getUser());
+            userid = userMessage.getUser();
         } catch(NumberFormatException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
@@ -54,54 +54,54 @@ public class MessageController {
         AssistantResponse ar = AssistantService.getInstance().getResponse(userMessage.getMessageContent());
         String returnMessage = convos.get(userid).handleResponse(ar);
 
-        return ResponseEntity.ok(new Message(returnMessage, Integer.toString(userid)));
+        return ResponseEntity.ok(new Message(returnMessage, userid));
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/getPromptMessage")
-    public Message getPromptMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
+    public Message getPromptMessage(@RequestParam(value = "name", defaultValue = "-1") int name) {
         return new Message("Hello, welcome to Tree for Me! I’ll help you find the perfect plant for your environment.", name);
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/getHumidityMessage")
-    public Message getHumidityMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
+    public Message getHumidityMessage(@RequestParam(value = "name", defaultValue = "-1") int name) {
         return new Message("Is your area humid or dry?", name);
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/getWaterMessage")
-    public Message getWaterMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
+    public Message getWaterMessage(@RequestParam(value = "name", defaultValue = "-1") int name) {
         return new Message("How often would you like to water the plant?", name);
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/getMaintenanceMessage")
-    public Message getMaintenanceMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
+    public Message getMaintenanceMessage(@RequestParam(value = "name", defaultValue = "-1") int name) {
         return new Message("Would you like a high, medium, or low-maintenance plant?", name);
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/getSunMessage")
-    public Message getSunMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
+    public Message getSunMessage(@RequestParam(value = "name", defaultValue = "-1") int name) {
         return new Message("What kind of sun does your space get?", name);
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/getSizeMessage")
-    public Message getSizeMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
+    public Message getSizeMessage(@RequestParam(value = "name", defaultValue = "-1") int name) {
         return new Message("Would you lke a large, medium, or small-sized plant?", name);
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/getPlantTypeMessage")
-    public Message getPlantTypeMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
+    public Message getPlantTypeMessage(@RequestParam(value = "name", defaultValue = "-1") int name) {
         return new Message("Do you have any idea what kind of plant you want?", name);
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/getFlowersMessage")
-    public Message getFlowersMessage(@RequestParam(value = "name", defaultValue = "p1@n7b07") String name) {
+    public Message getFlowersMessage(@RequestParam(value = "name", defaultValue = "-1") int name) {
         return new Message("Would you like your plant to have flowers or no flowers?", name);
     }
 }
