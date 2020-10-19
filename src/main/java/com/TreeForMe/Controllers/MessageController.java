@@ -54,7 +54,8 @@ public class MessageController {
         AssistantResponse ar = AssistantService.getInstance().getResponse(userMessage.getMessageContent());
         String returnMessage = convos.get(userid).handleResponse(ar);
 
-        return ResponseEntity.ok(new Message(returnMessage, userid));
+        //return ResponseEntity.ok(new Message(returnMessage, userid));
+        return ResponseEntity.ok(new Message("Here comes the pizza!", -2));
     }
 
     @CrossOrigin(origins = "http://localhost:4200")

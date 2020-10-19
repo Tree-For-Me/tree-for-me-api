@@ -3,6 +3,7 @@ package com.TreeForMe.Controllers;
 import com.TreeForMe.Models.Plant;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.ArrayList;
 
 import com.TreeForMe.Shared.DiscoveryService;
@@ -13,17 +14,19 @@ public class PlantInfoController {
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("discovery/getPlantSearchResult")
-    public Plant getPlantSearchResult(PlantInfo plantInfo) {
+    public List<Plant> getPlantSearchResult() {
+        /* NOTE: This is currently hardcoded for the sake of testing the front end.
+           This will need to be filled in with logic to get the correct keywords
+           obtained from the conversation in the stored plantInfo object.
+         */
         ArrayList<String> keywords = new ArrayList<>();
-        keywords.add(plantInfo.getFlowerType());
-        keywords.add(plantInfo.isHumidity()? "humid" : "dry");
-        keywords.add(plantInfo.getLight());
-        keywords.add(plantInfo.isFlowers()? "flowers" : "no flowers");
+        keywords.add("fern");
+        keywords.add("humid");
+        keywords.add("bright indirect");
+        keywords.add("flowers");
 
-        String plantResult = DiscoveryService.getInstance().getPlantNameFromKeywordSearch(keywords);
-        System.out.println("plantResult: " + plantResult);
-        Plant plant = new Plant(plantResult);
-        return plant;
+        List<Plant> plantResults = DiscoveryService.getInstance().getPlantNameFromKeywordSearch(keywords);
+        return plantResults;
     }
 
 }

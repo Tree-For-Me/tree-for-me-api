@@ -5,8 +5,11 @@ import com.ibm.cloud.sdk.core.security.IamAuthenticator;
 import com.ibm.watson.discovery.v1.Discovery;
 import com.ibm.watson.discovery.v1.model.*;
 
+import com.TreeForMe.Models.Plant;
+
 import java.util.AbstractMap;
 import java.util.List;
+import java.util.ArrayList;
 
 public final class DiscoveryService {
 
@@ -14,11 +17,11 @@ public final class DiscoveryService {
 
     private Discovery discovery;
 
-    private final String apiKey = "f6Vd5ZkUO2A3hmwhO2oSl6ZGUrS-al_Ze9MKS6nYotEC";
+    private final String apiKey = "WyZD8g21UK7CtLQRgmpA7M7O5b7WC2jL3lCdc--EXrA6";
     private final String version = "2019-04-30";
-    private final String serviceUrl = "https://api.us-south.discovery.watson.cloud.ibm.com/instances/4649ba97-b0ee-427b-a9c8-5ded79211b4e";
-    private final String environmentId = "fb6af9b1-75c4-40f4-a03a-5ab0d33e6456";
-    private final String collectionId = "2cc8aa00-e6de-4c87-a354-25a5bec22034";
+    private final String serviceUrl = "https://api.us-south.discovery.watson.cloud.ibm.com/instances/5d00a7e4-609b-47c2-9d1d-33136d30f172";
+    private final String environmentId = "f6f77231-b3f9-4da2-a58e-e3bb4792ffa0";
+    private final String collectionId = "566cec75-f4dc-447f-9923-135fad57d232";
 
     private DiscoveryService() {
         IamAuthenticator authenticator = new IamAuthenticator(apiKey);
@@ -48,11 +51,11 @@ public final class DiscoveryService {
         return queryResponse.getResults();
     }
 
-    public String getPlantNameFromKeywordSearch(List<String> keywords) {
+    public List<Plant> getPlantNameFromKeywordSearch(List<String> keywords) {
         // Build query
         StringBuilder query = new StringBuilder();
         for(String kw:keywords) {
-            query.append("text:\"").append(kw).append("\",");
+            query.append("content:\"").append(kw).append("\",");
         }
         // Remove trailing comma
         query.deleteCharAt(query.length()-1);
@@ -60,40 +63,24 @@ public final class DiscoveryService {
         List<QueryResult> qrs = runQuery(query.toString());
 
         if(qrs.isEmpty()) {
-            return "";
+            return new ArrayList<Plant>();
         }
 
-        // Ensure we choose a result with a title
-        QueryResult bestResult = qrs.get(0);
-        int resultIndex = 0;
-        while(!bestResult.getPropertyNames().contains("extracted_metadata")
-                || !((AbstractMap)bestResult.get("extracted_metadata")).containsKey("title")) {
-            resultIndex++;
-            if(resultIndex >= qrs.size()) {
-                // no results had a title
-                return "";
-            }
-            bestResult = qrs.get(resultIndex);
+        // Choose up to three best results
+        int results = qrs.size() > 2 ? 3 : qrs.size();
+        List<QueryResult> bestResults = qrs.subList(0, results);
+
+        // List of plant objects to return
+        List<Plant> bestPlants = new ArrayList<>();
+
+        for (QueryResult result : bestResults) {
+            String plantName = (String) result.get("page_title");
+            String imageLink = (String) result.get("image");
+            String botName = (String) result.get("botanical_name");
+            bestPlants.add(new Plant(plantName, imageLink, botName));
         }
 
-        String title = (String)((AbstractMap)bestResult.get("extracted_metadata")).get("title");
-
-        int careIdx = title.indexOf("Care");
-        int picIdx = title.indexOf("Picture");
-        int cutIdx = 0;
-        if(careIdx != -1 && picIdx != -1) {
-            cutIdx = Integer.min(careIdx, picIdx) - 1;
-        }
-        else if(careIdx == -1 && picIdx == -1) {
-            cutIdx = title.length();
-        }
-        else {
-            cutIdx = Integer.max(careIdx, picIdx) - 1;
-        }
-
-        String plantName = title.substring(0, cutIdx);
-
-        return plantName;
+        return bestPlants;
     }
 
     public static DiscoveryService getInstance() {
