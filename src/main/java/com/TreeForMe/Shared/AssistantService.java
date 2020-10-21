@@ -1,12 +1,16 @@
 package com.TreeForMe.Shared;
 
-import com.TreeForMe.Models.AssistantResponse;
 import com.ibm.cloud.sdk.core.security.Authenticator;
 import com.ibm.cloud.sdk.core.security.IamAuthenticator;
 import com.ibm.watson.assistant.v2.Assistant;
 import com.ibm.watson.assistant.v2.model.*;
 
-import com.TreeForMe.Models.Message;
+import com.TreeForMe.Models.*;
+import com.TreeForMe.Models.AssistantResponse.Intent;
+import com.TreeForMe.Shared.*;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.*;
 
@@ -20,6 +24,8 @@ public final class AssistantService {
     private final String serviceUrl = "https://api.us-south.assistant.watson.cloud.ibm.com/instances/45e166c6-5b68-4bcb-b783-69fa37178036";
     private final String assistantID = "54c951c6-f58d-48c6-bb3d-ea2eed4b9453";
     private String sessionId;
+
+    private Map<Integer, Conversation> convos = new HashMap<>();
 
     private AssistantService() {
         IamAuthenticator authenticator = new IamAuthenticator(apiKey);
@@ -72,6 +78,51 @@ public final class AssistantService {
         }
 
         return ar;
+    }
+
+    public ResponseEntity<Message> getAssistantResponse(Message userMessage) {
+        int userid;
+
+        // ensure user is an integer
+        try {
+            userid = userMessage.getUser();
+        } catch(NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        if(userid == -1) {
+            // find a userid that doesn't already exist
+            do {
+                userid++;
+            } while(convos.containsKey(userid));
+
+            // make a new assistant service session and new plantInfo object
+            convos.put(userid, new Conversation());
+        }
+
+        // ensure userid is valid
+        if(!convos.containsKey(userid)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        String userMessageContent = userMessage.getMessageContent();
+        String returnMessage = "Welcome to Tree For Me. I'm going to help you find the perfect plant!\nTell me something about the plant you're looking for or the environment it will be in. For now, you can talk about humidity, flowers, or sunlight!";
+        if(!userMessageContent.isEmpty()) {
+            AssistantResponse ar = AssistantService.getInstance().getResponse(userMessage.getMessageContent());
+            returnMessage = convos.get(userid).handleResponse(ar);
+        }
+
+        if(convos.get(userid).finished) {
+            userid = -2;
+        }
+
+        return ResponseEntity.ok(new Message(returnMessage, userid));
+    }
+
+
+
+    public Map<Integer, Conversation> getConvos() {
+        return convos;
     }
 
 }
