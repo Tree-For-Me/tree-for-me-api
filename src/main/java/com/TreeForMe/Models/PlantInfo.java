@@ -6,17 +6,17 @@ public class PlantInfo {
 
     private String flowerType;
     private String light;
-    private boolean flowers;
-    private boolean humidity;
+    private String flowers;
+    private String humidity;
 
     public PlantInfo() {
-        this.flowerType = "none";
-        this.light = "none";
-        this.flowers = false;
-        this.humidity = false;
+        this.flowerType = "";
+        this.light = "";
+        this.flowers = "";
+        this.humidity = "";
     }
 
-    public PlantInfo(String flowerType, String light, boolean flowers, boolean humidity) {
+    public PlantInfo(String flowerType, String light, String flowers, String humidity) {
         this.flowerType = flowerType;
         this.light = light;
         this.flowers = flowers;
@@ -39,19 +39,19 @@ public class PlantInfo {
         this.light = light;
     }
 
-    public boolean isFlowers() {
+    public String getFlowers() {
         return flowers;
     }
 
-    public void setFlowers(boolean flowers) {
+    public void setFlowers(String flowers) {
         this.flowers = flowers;
     }
 
-    public boolean isHumidity() {
+    public String getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(boolean humidity) {
+    public void setHumidity(String humidity) {
         this.humidity = humidity;
     }
 }

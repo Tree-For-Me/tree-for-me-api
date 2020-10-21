@@ -54,8 +54,9 @@ public final class DiscoveryService {
     public List<Plant> getPlantNameFromKeywordSearch(List<String> keywords) {
         // Build query
         StringBuilder query = new StringBuilder();
-        for(String kw:keywords) {
-            query.append("content:\"").append(kw).append("\",");
+        query.append("type:\"").append(keywords.get(0)).append("\",");
+        for(int i = 1; i < keywords.size(); i++) {
+            query.append("content:\"").append(keywords.get(i)).append("\",");
         }
         // Remove trailing comma
         query.deleteCharAt(query.length()-1);
