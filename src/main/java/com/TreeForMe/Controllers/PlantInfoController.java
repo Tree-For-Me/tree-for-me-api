@@ -1,11 +1,14 @@
 package com.TreeForMe.Controllers;
 
 import com.TreeForMe.Models.Plant;
+import com.TreeForMe.Models.Message;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.ArrayList;
 
 import com.TreeForMe.Shared.DiscoveryService;
+import com.TreeForMe.Shared.AssistantService;
 import com.TreeForMe.Models.PlantInfo;
 
 @RestController
@@ -13,17 +16,20 @@ public class PlantInfoController {
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("discovery/getPlantSearchResult")
-    public Plant getPlantSearchResult(PlantInfo plantInfo) {
+    public List<Plant> getPlantSearchResult(Message userMessage) {
+        //TODO: get actual userid from front-end
+        int userid = userMessage.getUser();
+        PlantInfo pi = AssistantService.getInstance().getConvos().get(userid).getPlantInfo();
+        System.out.println(pi.getFlowers());
+        System.out.println(pi.getHumidity());
+        System.out.println(pi.getLight());
         ArrayList<String> keywords = new ArrayList<>();
-        keywords.add(plantInfo.getFlowerType());
-        keywords.add(plantInfo.isHumidity()? "humid" : "dry");
-        keywords.add(plantInfo.getLight());
-        keywords.add(plantInfo.isFlowers()? "flowers" : "no flowers");
+        keywords.add(pi.getFlowers());
+        keywords.add(pi.getHumidity());
+        keywords.add(pi.getLight());
 
-        String plantResult = DiscoveryService.getInstance().getPlantNameFromKeywordSearch(keywords);
-        System.out.println("plantResult: " + plantResult);
-        Plant plant = new Plant(plantResult);
-        return plant;
+        List<Plant> plantResults = DiscoveryService.getInstance().getPlantNameFromKeywordSearch(keywords);
+        return plantResults;
     }
 
 }

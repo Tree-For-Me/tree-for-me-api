@@ -1,13 +1,12 @@
 package com.TreeForMe.Models;
 
-import org.springframework.web.bind.annotation.GetMapping;
 
 public class Message {
 
     private String messageContent;
-    private String user;
+    private int user;
 
-    public Message(String messageContent, String user) {
+    public Message(String messageContent, int user) {
         this.messageContent = messageContent;
         this.user = user;
     }
@@ -20,11 +19,11 @@ public class Message {
         this.messageContent = messageContent;
     }
 
-    public String getUser() {
+    public int getUser() {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(int user) {
         this.user = user;
     }
 }
