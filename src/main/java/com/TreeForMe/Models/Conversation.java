@@ -14,7 +14,7 @@ public class Conversation {
     private boolean endConvo;
     public boolean finished;
 
-    private static double LOWEST_CONFIDENCE = .4;
+    private static final double LOWEST_CONFIDENCE = .3;
     private Random random;
 
     public Conversation() {
@@ -31,7 +31,9 @@ public class Conversation {
         double primaryIntentConfidence = 0.0;
 
         // Find the max intent for each grouping
+        System.out.println("\nIntents:");
         for(Intent intent : ar.getIntents()) {
+            System.out.println(intent);
             String name = intent.getName();
             double confidence = intent.getConfidence();
             if (name.equals("end_conversation") && confidence > LOWEST_CONFIDENCE) {
@@ -77,21 +79,6 @@ public class Conversation {
             this.plantInfo.setHumidity(humidityInfo);
         }
 
-        /*
-        for (Map.Entry<String, IntentGroup> igEntry : this.intentGroups.entrySet()) {
-            String intentGroupName = igEntry.getKey();
-            IntentGroup ig = igEntry.getValue();
-
-            // if higher than certain value than set the confidence
-            if (this.ig.maxIntentConfidence > LOWEST_CONFIDENCE) {
-                Class plantInfoClass = plantInfo.getClass();
-                Field field = plantInfoClass.getDeclaredField(intentGroupName);
-                field.set(ig.maxIntentName)
-
-                // when do we get response?
-            }
-        }
-        */
     }
 
     private void updateFinished() {
@@ -108,13 +95,13 @@ public class Conversation {
     private String getResponse(String primaryIntentName) {
         String response = "";
         if (primaryIntentName.isEmpty()) {
-            response = "I didn't understand.";
+            response = getRandomResponse(IntentInfo.notUnderstandResponses);
             this.askingSpecifics = true;
         }
         else {
-            List<String> responses = IntentInfo.intentResponseMap.get(primaryIntentName);
-            int randomResponseNum = this.random.nextInt(responses.size());
-            response = responses.get(randomResponseNum);
+            // Get response depending on the intent
+            List<String> intentResponses = IntentInfo.intentResponseMap.get(primaryIntentName);
+            response = getRandomResponse(intentResponses);
         }
 
         this.updateFinished();
@@ -124,17 +111,17 @@ public class Conversation {
             if (askingSpecifics) {
                 for(IntentInfo.IntentGroup ig : IntentInfo.intentGroups.values()) {
                     if (!ig.provided) {
-                        response += "\n" + ig.prompt;
+                        response += "\n" + getRandomResponse(ig.prompts);
                         break;
                     }
                 }
             }
             else {
-                response += "\nTell me something about the plant you're looking for or the environment it will be in. For now, you can talk about humidity, flowers, or sunlight!";
+                response += getRandomResponse(IntentInfo.genericResponses);
             }
 
         } else {
-            response += "\nLet's find you the perfect plant...";
+            response += getRandomResponse(IntentInfo.convoOverResponses);
         }
 
         return response;
@@ -161,4 +148,8 @@ public class Conversation {
         return this.plantInfo;
     }
 
+    private String getRandomResponse(List<String> listOfResponses) {
+        int randomResponseNum = this.random.nextInt(listOfResponses.size());
+        return listOfResponses.get(randomResponseNum);
+    }
 }
