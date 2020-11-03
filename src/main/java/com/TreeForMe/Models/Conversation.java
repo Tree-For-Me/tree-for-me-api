@@ -13,7 +13,7 @@ public class Conversation {
 
     private boolean askingSpecifics;
     private boolean endConvo;
-    public boolean finished;
+    private boolean finished;
 
     private Map<String, IntentGroup> intentGroups;
 
@@ -110,6 +110,11 @@ public class Conversation {
         }
     }
 
+    private String getRandomResponse(List<String> listOfResponses) {
+        int randomResponseNum = this.random.nextInt(listOfResponses.size());
+        return listOfResponses.get(randomResponseNum);
+    }
+
     private String getResponse(String primaryIntentName) {
         /* Respond to user's answer */
         String response = "";
@@ -167,8 +172,8 @@ public class Conversation {
         return this.plantInfo;
     }
 
-    private String getRandomResponse(List<String> listOfResponses) {
-        int randomResponseNum = this.random.nextInt(listOfResponses.size());
-        return listOfResponses.get(randomResponseNum);
+    public boolean isFinished() {
+        return finished;
     }
+
 }

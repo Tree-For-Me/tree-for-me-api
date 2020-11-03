@@ -82,7 +82,7 @@ public final class IntentInfo {
         humidityIntents.add("low_humidity");
         humidityIntents.add("medium_humidity");
         humidityIntents.add("high_humidity");
-        
+
         intentSearchMap = new HashMap<String, String>();
         intentSearchMap.put("low_humidity", "not humid");
         intentSearchMap.put("medium_humidity", "kind of humid");

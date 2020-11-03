@@ -23,6 +23,8 @@ public class PlantInfoController {
         System.out.println(pi.getHumidity());
         System.out.println(pi.getLight());
         ArrayList<String> keywords = new ArrayList<>();
+        //TODO: make discovery call more robust
+        //TODO: plantinfo constructor sets default value to flowers field so we don't crash. remove that once this is changed!!
         keywords.add(pi.getFlowers());
         if (!pi.getHumidity().isEmpty()) {
             keywords.add(pi.getHumidity());

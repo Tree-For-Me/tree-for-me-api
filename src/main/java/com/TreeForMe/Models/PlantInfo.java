@@ -10,7 +10,7 @@ public class PlantInfo {
     public PlantInfo() {
         this.flowerType = "";
         this.light = "";
-        this.flowers = "";
+        this.flowers = "flowering";
         this.humidity = "";
     }
 

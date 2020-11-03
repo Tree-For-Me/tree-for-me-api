@@ -81,14 +81,9 @@ public final class AssistantService {
     }
 
     public ResponseEntity<Message> getAssistantResponse(Message userMessage) {
-        int userid = 0;
-
-        // ensure user is an integer
-        try {
-            userid = userMessage.getUser();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+        int userid = userMessage.getUser();
+        String userMessageContent = userMessage.getMessageContent();
+        String returnMessage;
 
         if (userid == -1) {
             // find a userid that doesn't already exist
@@ -98,23 +93,21 @@ public final class AssistantService {
 
             // make a new assistant service session and new plantInfo object
             convos.put(userid, new Conversation());
-        }
 
-        // ensure userid is valid
-        if (!convos.containsKey(userid)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-
-        String userMessageContent = userMessage.getMessageContent();
-        String returnMessage;
-        if (userMessageContent.equals("watch?v=dQw4w9WgXcQ")) {
             returnMessage = "Welcome to Tree For Me. I'm going to help you find the perfect plant!\nTell me something about the plant you're looking for or the environment it will be in. For now, you can talk about humidity, flowers, or sunlight!";
         }
         else {
+            // ensure userid is valid
+            if (!convos.containsKey(userid)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
+
             AssistantResponse ar = AssistantService.getInstance().getResponse(userMessageContent);
             returnMessage = convos.get(userid).handleResponse(ar);
+
         }
-        if (convos.get(userid).finished) {
+
+        if (convos.get(userid).isFinished()) {
             userid = -2;
         }
 
