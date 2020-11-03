@@ -30,10 +30,27 @@ public final class IntentInfo {
     public static Set<String> humidityIntents;
     public static Set<String> flowerIntents;
 
-    public static Map<String, IntentGroup> intentGroups;
-
     public static Map<String, String> intentSearchMap;
     public static Map<String, List<String>> intentResponseMap;
+
+    public static Map<String, IntentGroup> getNewIntentGroups() {
+        Map<String, IntentGroup> intentGroups = new HashMap<String, IntentGroup>();
+
+        List<String> lightIntentQuestions = new ArrayList<String>();
+        lightIntentQuestions.add("What kind of light will your plants get?");
+        lightIntentQuestions.add("What kind of light do you think your plants will get?");
+        intentGroups.put("light", new IntentGroup(lightIntents, lightIntentQuestions));
+        List<String> flowerIntentQuestions = new ArrayList<String>();
+        flowerIntentQuestions.add("Do you want flowers on your plant? Or would you prefer just foliage?");
+        flowerIntentQuestions.add("Would you like flowers or no flowers on your plant?");
+        intentGroups.put("flower", new IntentGroup(flowerIntents, flowerIntentQuestions));
+        List<String> humidityIntentQuestions = new ArrayList<String>();
+        humidityIntentQuestions.add("Describe the humidity in your area.");
+        humidityIntentQuestions.add("What is the humidity like in your area?");
+        intentGroups.put("humidity", new IntentGroup(humidityIntents, humidityIntentQuestions));
+
+        return intentGroups;
+    }
 
     // Initialize static variables
     static {
@@ -51,7 +68,6 @@ public final class IntentInfo {
         notUnderstandResponses.add("I didn't understand.");
         notUnderstandResponses.add("Sorry your response didn't make sense to me.");
         notUnderstandResponses.add("Sorry, I’m afraid I don’t follow you.");
-        notUnderstandResponses.add("Come again?");
 
         lightIntents = new HashSet<String>();
         lightIntents.add("bright_light");
@@ -66,22 +82,7 @@ public final class IntentInfo {
         humidityIntents.add("low_humidity");
         humidityIntents.add("medium_humidity");
         humidityIntents.add("high_humidity");
-
-
-        intentGroups = new HashMap<String, IntentGroup>();
-        List<String> lightIntentQuestions = new ArrayList<String>();
-        lightIntentQuestions.add("What kind of light will your plants get?");
-        lightIntentQuestions.add("What kind of light do you think your plants will get?");
-        intentGroups.put("light", new IntentGroup(lightIntents, lightIntentQuestions));
-        List<String> flowerIntentQuestions = new ArrayList<String>();
-        flowerIntentQuestions.add("Do you want flowers on your plant? Or would you prefer just foliage?");
-        flowerIntentQuestions.add("Would you like flowers or no flowers on your plant?");
-        intentGroups.put("flower", new IntentGroup(flowerIntents, flowerIntentQuestions));
-        List<String> humidityIntentQuestions = new ArrayList<String>();
-        humidityIntentQuestions.add("Describe the humidity in your area.");
-        humidityIntentQuestions.add("What is the humidity like in your area?");
-        intentGroups.put("humidity", new IntentGroup(humidityIntents, humidityIntentQuestions));
-
+        
         intentSearchMap = new HashMap<String, String>();
         intentSearchMap.put("low_humidity", "not humid");
         intentSearchMap.put("medium_humidity", "kind of humid");
@@ -139,5 +140,10 @@ public final class IntentInfo {
         end_conversation_responses.add("Alright, we're done here.");
         end_conversation_responses.add("I see you want to be done, we will move on.");
         intentResponseMap.put("end_conversation", end_conversation_responses);
+
+        List<String> non_answer_responses = new ArrayList<String>();
+        non_answer_responses.add("Ok, let's move on.");
+        non_answer_responses.add("That's alright, no one has all the answers.");
+        intentResponseMap.put("non_answer", non_answer_responses);
     }
 }

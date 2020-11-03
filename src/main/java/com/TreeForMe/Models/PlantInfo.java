@@ -1,7 +1,5 @@
 package com.TreeForMe.Models;
 
-import org.springframework.web.bind.annotation.GetMapping;
-
 public class PlantInfo {
 
     private String flowerType;

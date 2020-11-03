@@ -47,7 +47,7 @@ public final class AssistantService {
     }
 
     public static AssistantService getInstance() {
-        if(as == null) {
+        if (as == null) {
             as = new AssistantService();
         }
 
@@ -73,7 +73,7 @@ public final class AssistantService {
 
         // extract returned intents
         AssistantResponse ar = new AssistantResponse();
-        for(Map<String, Object> intent : intents) {
+        for (Map<String, Object> intent : intents) {
             ar.addIntent((String)intent.get("intent"), (Double)intent.get("confidence"));
         }
 
@@ -81,44 +81,45 @@ public final class AssistantService {
     }
 
     public ResponseEntity<Message> getAssistantResponse(Message userMessage) {
-        int userid;
+        int userid = 0;
 
         // ensure user is an integer
         try {
             userid = userMessage.getUser();
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
-        if(userid == -1) {
+        if (userid == -1) {
             // find a userid that doesn't already exist
             do {
                 userid++;
-            } while(convos.containsKey(userid));
+            } while (convos.containsKey(userid));
 
             // make a new assistant service session and new plantInfo object
             convos.put(userid, new Conversation());
         }
 
         // ensure userid is valid
-        if(!convos.containsKey(userid)) {
+        if (!convos.containsKey(userid)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
         String userMessageContent = userMessage.getMessageContent();
-        String returnMessage = "Welcome to Tree For Me. I'm going to help you find the perfect plant!\nTell me something about the plant you're looking for or the environment it will be in. For now, you can talk about humidity, flowers, or sunlight!";
-        if(!userMessageContent.isEmpty()) {
-            AssistantResponse ar = AssistantService.getInstance().getResponse(userMessage.getMessageContent());
+        String returnMessage;
+        if (userMessageContent.equals("watch?v=dQw4w9WgXcQ")) {
+            returnMessage = "Welcome to Tree For Me. I'm going to help you find the perfect plant!\nTell me something about the plant you're looking for or the environment it will be in. For now, you can talk about humidity, flowers, or sunlight!";
+        }
+        else {
+            AssistantResponse ar = AssistantService.getInstance().getResponse(userMessageContent);
             returnMessage = convos.get(userid).handleResponse(ar);
         }
-
-        if(convos.get(userid).finished) {
+        if (convos.get(userid).finished) {
             userid = -2;
         }
 
         return ResponseEntity.ok(new Message(returnMessage, userid));
     }
-
 
 
     public Map<Integer, Conversation> getConvos() {
