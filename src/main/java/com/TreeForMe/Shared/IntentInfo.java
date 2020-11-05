@@ -77,6 +77,7 @@ public final class IntentInfo {
         flowerIntents = new HashSet<String>();
         flowerIntents.add("has_flowers");
         flowerIntents.add("not_have_flowers");
+        flowerIntents.add("Cactus_succulent");
 
         humidityIntents = new HashSet<String>();
         humidityIntents.add("low_humidity");
@@ -87,22 +88,25 @@ public final class IntentInfo {
         intentSearchMap.put("low_humidity", "low");
         intentSearchMap.put("medium_humidity", "medium");
         intentSearchMap.put("high_humidity", "high");
-        intentSearchMap.put("low_light", "low light");
-        intentSearchMap.put("bright_light", "indirect");
+        intentSearchMap.put("low_light", "low");
+        intentSearchMap.put("bright_light", "bright");
         intentSearchMap.put("direct_light", "direct");
         intentSearchMap.put("has_flowers", "flowering");
         intentSearchMap.put("not_have_flowers", "foliage");
+        intentSearchMap.put("Cactus_succulent", "cactus_succ");
 
         // TODO: add more responses
         intentResponseMap = new HashMap<String, List<String>>();
         List<String> low_humidity_responses = new ArrayList<String>();
         low_humidity_responses.add("Sounds like you have some dry air!");
         low_humidity_responses.add("Deserts are fun.");
+        low_humidity_responses.add("Pretty dry, Huh?");
         intentResponseMap.put("low_humidity", low_humidity_responses);
 
         List<String> medium_humidity_responses = new ArrayList<String>();
         medium_humidity_responses.add("Ah, standard air.");
         medium_humidity_responses.add("Nice, normal humidity.");
+        medium_humidity_responses.add("Pretty standard I see.");
         intentResponseMap.put("medium_humidity", medium_humidity_responses);
 
         List<String> high_humidity_responses = new ArrayList<String>();
@@ -114,6 +118,7 @@ public final class IntentInfo {
         List<String> low_light_responses = new ArrayList<String>();
         low_light_responses.add("I get it. You want a sneaky spy plant that lives in the shadows.");
         low_light_responses.add("So your room doesn't get very much light, some plants like that surprisingly!");
+        low_light_responses.add("Gotta love the shade sometimes.");
         intentResponseMap.put("low_light", low_light_responses);
 
         List<String> bright_light_responses = new ArrayList<String>();
@@ -124,6 +129,7 @@ public final class IntentInfo {
         List<String> direct_light_responses = new ArrayList<String>();
         direct_light_responses.add("A straight path to the sun.");
         direct_light_responses.add("You might need to wear sunglasses to get out of that direct sunlight.");
+        direct_light_responses.add("I'll try to find a plant that doesn't burn from direct sunlight.");
         intentResponseMap.put("direct_light", direct_light_responses);
 
         List<String> has_flowers_responses = new ArrayList<String>();
@@ -134,7 +140,13 @@ public final class IntentInfo {
         List<String> not_have_flowers_responses = new ArrayList<String>();
         not_have_flowers_responses.add("You're more of a leaf person. I get it.");
         not_have_flowers_responses.add("So you only want leaves on your plant, that's great.");
+        not_have_flowers_responses.add("Sometimes foliage is just as pretty as flowers!");
         intentResponseMap.put("not_have_flowers", not_have_flowers_responses);
+
+        List<String> cactus_succulent_responses = new ArrayList<String>();
+        not_have_flowers_responses.add("Perhaps something prickly then?");
+        not_have_flowers_responses.add("Maybe a cactus or a succulent - they're pretty easy.");
+        intentResponseMap.put("Cactus_succulent", not_have_flowers_responses);
 
         List<String> end_conversation_responses = new ArrayList<String>();
         end_conversation_responses.add("Alright, we're done here.");
