@@ -6,10 +6,13 @@ import com.ibm.watson.discovery.v1.Discovery;
 import com.ibm.watson.discovery.v1.model.*;
 
 import com.TreeForMe.Models.Plant;
+import com.TreeForMe.Models.PlantInfo;
 
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 public final class DiscoveryService {
 
@@ -21,7 +24,7 @@ public final class DiscoveryService {
     private final String version = "2019-04-30";
     private final String serviceUrl = "https://api.us-south.discovery.watson.cloud.ibm.com/instances/5d00a7e4-609b-47c2-9d1d-33136d30f172";
     private final String environmentId = "f6f77231-b3f9-4da2-a58e-e3bb4792ffa0";
-    private final String collectionId = "566cec75-f4dc-447f-9923-135fad57d232";
+    private final String collectionId = "12ed6efa-a259-4681-8bcd-4f596ae67dbb";
 
     private DiscoveryService() {
         IamAuthenticator authenticator = new IamAuthenticator(apiKey);
@@ -54,8 +57,8 @@ public final class DiscoveryService {
     public List<Plant> getPlantNameFromKeywordSearch(List<String> keywords) {
         // Build query
         StringBuilder query = new StringBuilder();
-        query.append("type:\"").append(keywords.get(0)).append("\",");
-        for(int i = 1; i < keywords.size(); i++) {
+        //query.append("type:\"").append(keywords.get(0)).append("\",");
+        for(int i = 0; i < keywords.size(); i++) {
             query.append("content:\"").append(keywords.get(i)).append("\",");
         }
         // Remove trailing comma
@@ -78,7 +81,45 @@ public final class DiscoveryService {
             String plantName = (String) result.get("page_title");
             String imageLink = (String) result.get("image");
             String botName = (String) result.get("botanical_name");
-            bestPlants.add(new Plant(plantName, imageLink, botName));
+            bestPlants.add(new Plant(plantName, imageLink, botName, "#"));
+        }
+
+        return bestPlants;
+    }
+
+    public List<Plant> getPlantNameFromFieldSearch(PlantInfo plantInfo) {
+        // Build query
+        StringBuilder query = new StringBuilder();
+
+        if (plantInfo.getFlowers() != "")
+            query.append("type:\"").append(plantInfo.getFlowers()).append("\",");
+        if (plantInfo.getHumidity() != "")
+            query.append("humidity:\"").append(plantInfo.getHumidity()).append("\",");
+        if (plantInfo.getLight() != "")
+            query.append("light:\"").append(plantInfo.getLight()).append("\",");
+
+        // Remove trailing comma
+        query.deleteCharAt(query.length()-1);
+
+        List<QueryResult> qrs = runQuery(query.toString());
+
+        if(qrs.isEmpty()) {
+            return new ArrayList<Plant>();
+        }
+
+        // Choose up to three best results
+        int results = qrs.size() > 2 ? 3 : qrs.size();
+        List<QueryResult> bestResults = qrs.subList(0, results);
+
+        // List of plant objects to return
+        List<Plant> bestPlants = new ArrayList<>();
+
+        for (QueryResult result : bestResults) {
+            String plantName = (String) result.get("page_title");
+            String imageLink = (String) result.get("image");
+            String botName = (String) result.get("botanical_name");
+            String careLink = (String) result.get("link");
+            bestPlants.add(new Plant(plantName, imageLink, botName, careLink));
         }
 
         return bestPlants;

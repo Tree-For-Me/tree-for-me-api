@@ -53,9 +53,9 @@ public final class IntentInfo {
         intentGroups.put("humidity", new IntentGroup(humidityIntents, "Describe the humidity in your area."));
 
         intentSearchMap = new HashMap<String, String>();
-        intentSearchMap.put("low_humidity", "not humid");
-        intentSearchMap.put("medium_humidity", "kind of humid");
-        intentSearchMap.put("high_humidity", "humid");
+        intentSearchMap.put("low_humidity", "low");
+        intentSearchMap.put("medium_humidity", "medium");
+        intentSearchMap.put("high_humidity", "high");
         intentSearchMap.put("low_light", "low light");
         intentSearchMap.put("bright_light", "indirect");
         intentSearchMap.put("direct_light", "direct");

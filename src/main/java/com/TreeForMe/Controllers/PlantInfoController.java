@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.TreeForMe.Shared.DiscoveryService;
 import com.TreeForMe.Shared.AssistantService;
@@ -23,12 +25,15 @@ public class PlantInfoController {
         System.out.println(pi.getFlowers());
         System.out.println(pi.getHumidity());
         System.out.println(pi.getLight());
-        ArrayList<String> keywords = new ArrayList<>();
-        keywords.add(pi.getFlowers());
-        keywords.add(pi.getHumidity());
-        keywords.add(pi.getLight());
+//        ArrayList<String> keywords = new ArrayList<>();
+//        if (pi.getFlowers() != "")
+//            keywords.add(pi.getFlowers());
+//        if (pi.getHumidity() != "")
+//            keywords.add(pi.getHumidity());
+//        if (pi.getLight() != "")
+//            keywords.add(pi.getLight());
 
-        List<Plant> plantResults = DiscoveryService.getInstance().getPlantNameFromKeywordSearch(keywords);
+        List<Plant> plantResults = DiscoveryService.getInstance().getPlantNameFromFieldSearch(pi);
         return plantResults;
     }
 
