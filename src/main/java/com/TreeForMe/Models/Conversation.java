@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.TreeForMe.Models.AssistantResponse.Intent;
 import com.TreeForMe.Shared.IntentInfo;
+import com.TreeForMe.Shared.IntentInfo.IntentGroup;
 
 public class Conversation {
 
@@ -12,9 +13,14 @@ public class Conversation {
 
     private boolean askingSpecifics;
     private boolean endConvo;
-    public boolean finished;
+    private boolean finished;
 
-    private static double LOWEST_CONFIDENCE = .4;
+    private Map<String, IntentGroup> intentGroups;
+
+    /* null if generic, corresponding intent group if specific */
+    private IntentGroup previousQuestion;
+
+    private static final double LOWEST_CONFIDENCE = .3;
     private Random random;
 
     public Conversation() {
@@ -22,8 +28,9 @@ public class Conversation {
         this.endConvo = false;
         this.finished = false;
         this.askingSpecifics = false;
+        this.previousQuestion = null;
         this.random = new Random();
-
+        this.intentGroups = IntentInfo.getNewIntentGroups();
     }
 
     private String processIntents(AssistantResponse ar) {
@@ -31,110 +38,114 @@ public class Conversation {
         double primaryIntentConfidence = 0.0;
 
         // Find the max intent for each grouping
+        System.out.println("\nIntents:");
         for(Intent intent : ar.getIntents()) {
+            System.out.println(intent);
             String name = intent.getName();
             double confidence = intent.getConfidence();
+
+            if (confidence > LOWEST_CONFIDENCE && confidence > primaryIntentConfidence) {
+                primaryIntentConfidence = confidence;
+                primaryIntentName = name;
+            }
+
+            /* Match intent name */
             if (name.equals("end_conversation") && confidence > LOWEST_CONFIDENCE) {
                 this.endConvo = true;
-                if (confidence > primaryIntentConfidence) {
-                    primaryIntentConfidence = confidence;
-                    primaryIntentName = name;
+            }
+            else if (name.equals("non_answer") && confidence > LOWEST_CONFIDENCE) {
+                if (this.previousQuestion != null) {
+                    this.previousQuestion.provided = true;
+                }
+                else {
+                    this.askingSpecifics = true;
                 }
             }
-            for(IntentInfo.IntentGroup ig : IntentInfo.intentGroups.values()) {
-                if (ig.intentNames.contains(name)) {
-                    if (confidence > ig.maxIntentConfidence && confidence > LOWEST_CONFIDENCE) {
+            else {
+                for (IntentGroup ig : this.intentGroups.values()) {
+                    if (ig.intentNames.contains(name) && confidence > LOWEST_CONFIDENCE && confidence > ig.maxIntentConfidence) {
                         ig.maxIntentConfidence = confidence;
                         ig.maxIntentName = name;
                         ig.provided = true;
-                        if (confidence > primaryIntentConfidence) {
-                            primaryIntentConfidence = confidence;
-                            primaryIntentName = name;
-                        }
                     }
                 }
             }
+        }
+
+        if (primaryIntentName.isEmpty()) {
+            this.askingSpecifics = true;
         }
 
         return primaryIntentName;
     }
 
-    //TODO
     private void fillPlantInfo() {
         // populate plantInfo
-        if (!IntentInfo.intentGroups.get("light").maxIntentName.isEmpty()) {
-            String lightInfo = IntentInfo.intentSearchMap.get(IntentInfo.intentGroups.get("light").maxIntentName);
+        if (!this.intentGroups.get("light").maxIntentName.isEmpty()) {
+            String lightInfo = IntentInfo.intentSearchMap.get(this.intentGroups.get("light").maxIntentName);
             this.plantInfo.setLight(lightInfo);
         }
 
-        if (!IntentInfo.intentGroups.get("flower").maxIntentName.isEmpty()) {
-            String flowerInfo = IntentInfo.intentSearchMap.get(IntentInfo.intentGroups.get("flower").maxIntentName);
+        if (!this.intentGroups.get("flower").maxIntentName.isEmpty()) {
+            String flowerInfo = IntentInfo.intentSearchMap.get(this.intentGroups.get("flower").maxIntentName);
             this.plantInfo.setFlowers(flowerInfo);
         }
 
-        if (!IntentInfo.intentGroups.get("humidity").maxIntentName.isEmpty()) {
-            String humidityInfo = IntentInfo.intentSearchMap.get(IntentInfo.intentGroups.get("humidity").maxIntentName);
+        if (!this.intentGroups.get("humidity").maxIntentName.isEmpty()) {
+            String humidityInfo = IntentInfo.intentSearchMap.get(this.intentGroups.get("humidity").maxIntentName);
             this.plantInfo.setHumidity(humidityInfo);
         }
 
-        /*
-        for (Map.Entry<String, IntentGroup> igEntry : this.intentGroups.entrySet()) {
-            String intentGroupName = igEntry.getKey();
-            IntentGroup ig = igEntry.getValue();
-
-            // if higher than certain value than set the confidence
-            if (this.ig.maxIntentConfidence > LOWEST_CONFIDENCE) {
-                Class plantInfoClass = plantInfo.getClass();
-                Field field = plantInfoClass.getDeclaredField(intentGroupName);
-                field.set(ig.maxIntentName)
-
-                // when do we get response?
-            }
-        }
-        */
     }
 
     private void updateFinished() {
         this.finished = true;
         if (!this.endConvo) {
-            for (IntentInfo.IntentGroup ig : IntentInfo.intentGroups.values()) {
+            for (IntentGroup ig : this.intentGroups.values()) {
                 if (!ig.provided) {
                     this.finished = false;
+                    break;
                 }
             }
         }
     }
 
+    private String getRandomResponse(List<String> listOfResponses) {
+        int randomResponseNum = this.random.nextInt(listOfResponses.size());
+        return listOfResponses.get(randomResponseNum);
+    }
+
     private String getResponse(String primaryIntentName) {
+        /* Respond to user's answer */
         String response = "";
         if (primaryIntentName.isEmpty()) {
-            response = "I didn't understand.";
-            this.askingSpecifics = true;
+            response = getRandomResponse(IntentInfo.notUnderstandResponses);
         }
         else {
-            List<String> responses = IntentInfo.intentResponseMap.get(primaryIntentName);
-            int randomResponseNum = this.random.nextInt(responses.size());
-            response = responses.get(randomResponseNum);
+            // Get response depending on the intent
+            List<String> intentResponses = IntentInfo.intentResponseMap.get(primaryIntentName);
+            response = getRandomResponse(intentResponses);
         }
 
+        /* Ask next question */
         this.updateFinished();
-
-
         if (!this.finished) {
             if (askingSpecifics) {
-                for(IntentInfo.IntentGroup ig : IntentInfo.intentGroups.values()) {
+                for(IntentGroup ig : this.intentGroups.values()) {
                     if (!ig.provided) {
-                        response += "\n" + ig.prompt;
+                        response += "\n" + getRandomResponse(ig.prompts);
+                        this.previousQuestion = ig;
                         break;
                     }
                 }
             }
             else {
-                response += "\nTell me something about the plant you're looking for or the environment it will be in. For now, you can talk about humidity, flowers, or sunlight!";
+                response += getRandomResponse(IntentInfo.genericResponses);
+                this.previousQuestion = null;
             }
 
         } else {
-            response += "\nLet's find you the perfect plant...";
+            response += getRandomResponse(IntentInfo.convoOverResponses);
         }
 
         return response;
@@ -143,7 +154,7 @@ public class Conversation {
 
     public String handleResponse(AssistantResponse ar) {
         // reset from last time we got a response
-        for(IntentInfo.IntentGroup ig : IntentInfo.intentGroups.values()) {
+        for(IntentGroup ig : this.intentGroups.values()) {
             ig.maxIntentConfidence = 0.0;
             ig.maxIntentName = "";
         }
@@ -159,6 +170,10 @@ public class Conversation {
 
     public PlantInfo getPlantInfo() {
         return this.plantInfo;
+    }
+
+    public boolean isFinished() {
+        return finished;
     }
 
 }

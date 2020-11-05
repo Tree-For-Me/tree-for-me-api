@@ -19,7 +19,6 @@ public class PlantInfoController {
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("discovery/getPlantSearchResult")
     public List<Plant> getPlantSearchResult(Message userMessage) {
-        //TODO: get actual userid from front-end
         int userid = userMessage.getUser();
         PlantInfo pi = AssistantService.getInstance().getConvos().get(userid).getPlantInfo();
         System.out.println(pi.getFlowers());
@@ -32,6 +31,16 @@ public class PlantInfoController {
 //            keywords.add(pi.getHumidity());
 //        if (pi.getLight() != "")
 //            keywords.add(pi.getLight());
+//        ArrayList<String> keywords = new ArrayList<>();
+//        //TODO: make discovery call more robust
+//        //TODO: plantinfo constructor sets default value to flowers field so we don't crash. remove that once this is changed!!
+//        keywords.add(pi.getFlowers());
+//        if (!pi.getHumidity().isEmpty()) {
+//            keywords.add(pi.getHumidity());
+//        }
+//        if (!pi.getLight().isEmpty()) {
+//            keywords.add(pi.getLight());
+//        }
 
         List<Plant> plantResults = DiscoveryService.getInstance().getPlantNameFromFieldSearch(pi);
         return plantResults;
