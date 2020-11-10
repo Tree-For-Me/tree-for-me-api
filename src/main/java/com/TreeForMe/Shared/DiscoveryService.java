@@ -8,11 +8,7 @@ import com.ibm.watson.discovery.v1.model.*;
 import com.TreeForMe.Models.Plant;
 import com.TreeForMe.Models.PlantInfo;
 
-import java.util.AbstractMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 public final class DiscoveryService {
 
@@ -91,15 +87,17 @@ public final class DiscoveryService {
         // Build query
         StringBuilder query = new StringBuilder();
 
-        if (plantInfo.getFlowers() != "")
+        if (!plantInfo.getFlowers().isEmpty())
             query.append("type:\"").append(plantInfo.getFlowers()).append("\",");
-        if (plantInfo.getHumidity() != "")
+        if (!plantInfo.getHumidity().isEmpty())
             query.append("humidity:\"").append(plantInfo.getHumidity()).append("\",");
-        if (plantInfo.getLight() != "")
+        if (!plantInfo.getLight().isEmpty())
             query.append("light:\"").append(plantInfo.getLight()).append("\",");
 
         // Remove trailing comma
-        query.deleteCharAt(query.length()-1);
+        if (query.length() > 0) {
+            query.deleteCharAt(query.length() - 1);
+        }
 
         List<QueryResult> qrs = runQuery(query.toString());
 
@@ -108,7 +106,8 @@ public final class DiscoveryService {
         }
 
         // Choose up to three best results
-        int results = qrs.size() > 2 ? 3 : qrs.size();
+        int results = qrs.size() > 4 ? 5 : qrs.size();
+        Collections.shuffle(qrs);
         List<QueryResult> bestResults = qrs.subList(0, results);
 
         // List of plant objects to return
