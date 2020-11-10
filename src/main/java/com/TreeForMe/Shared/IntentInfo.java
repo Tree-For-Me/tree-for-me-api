@@ -144,9 +144,9 @@ public final class IntentInfo {
         intentResponseMap.put("not_have_flowers", not_have_flowers_responses);
 
         List<String> cactus_succulent_responses = new ArrayList<String>();
-        not_have_flowers_responses.add("Perhaps something prickly then?");
-        not_have_flowers_responses.add("Maybe a cactus or a succulent - they're pretty easy.");
-        intentResponseMap.put("Cactus_succulent", not_have_flowers_responses);
+        cactus_succulent_responses.add("Perhaps something prickly then?");
+        cactus_succulent_responses.add("Maybe a cactus or a succulent - they're pretty easy.");
+        intentResponseMap.put("Cactus_succulent", cactus_succulent_responses);
 
         List<String> end_conversation_responses = new ArrayList<String>();
         end_conversation_responses.add("Alright, we're done here.");
