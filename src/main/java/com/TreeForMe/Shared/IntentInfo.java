@@ -81,12 +81,12 @@ public final class IntentInfo {
 
         humidityIntents = new HashSet<String>();
         humidityIntents.add("low_humidity");
-        humidityIntents.add("medium_humidity");
+        humidityIntents.add("med_humidity");
         humidityIntents.add("high_humidity");
 
         intentSearchMap = new HashMap<String, String>();
         intentSearchMap.put("low_humidity", "low");
-        intentSearchMap.put("medium_humidity", "medium");
+        intentSearchMap.put("med_humidity", "medium");
         intentSearchMap.put("high_humidity", "high");
         intentSearchMap.put("low_light", "low");
         intentSearchMap.put("bright_light", "bright");
@@ -107,7 +107,7 @@ public final class IntentInfo {
         medium_humidity_responses.add("Ah, standard air.");
         medium_humidity_responses.add("Nice, normal humidity.");
         medium_humidity_responses.add("Pretty standard I see.");
-        intentResponseMap.put("medium_humidity", medium_humidity_responses);
+        intentResponseMap.put("med_humidity", medium_humidity_responses);
 
         List<String> high_humidity_responses = new ArrayList<String>();
         high_humidity_responses.add("Your air is wet.");

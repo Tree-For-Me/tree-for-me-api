@@ -3,6 +3,8 @@ package com.TreeForMe.Controllers;
 import com.TreeForMe.Models.Conversation;
 import com.TreeForMe.Models.Plant;
 import com.TreeForMe.Models.Message;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,9 +21,13 @@ public class PlantInfoController {
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("discovery/getPlantSearchResult")
-    public List<Plant> getPlantSearchResult(Message userMessage) {
+    public ResponseEntity<List<Plant>> getPlantSearchResult(Message userMessage) {
         int userid = userMessage.getUser();
         Conversation currentConvo = AssistantService.getInstance().getConvos().get(userid);
+        if (currentConvo == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
         PlantInfo pi = currentConvo.getPlantInfo();
         System.out.println(pi.getFlowers());
         System.out.println(pi.getHumidity());
@@ -45,7 +51,7 @@ public class PlantInfoController {
 //        }
 
         List<Plant> plantResults = DiscoveryService.getInstance().getPlantNameFromFieldSearch(currentConvo);
-        return plantResults;
+        return ResponseEntity.ok(plantResults);
     }
 
 }

@@ -102,8 +102,12 @@ public final class AssistantService {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
 
-            AssistantResponse ar = AssistantService.getInstance().getResponse(userMessageContent);
-            returnMessage = convos.get(userid).handleResponse(ar);
+            if (userMessageContent.length() > 2048) {
+                returnMessage = "Text cannot be longer than 2048 characters, stop trying to break our backend!";
+            } else {
+                AssistantResponse ar = AssistantService.getInstance().getResponse(userMessageContent);
+                returnMessage = convos.get(userid).handleResponse(ar);
+            }
 
         }
 
