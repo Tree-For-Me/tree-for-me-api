@@ -1,5 +1,6 @@
 package com.TreeForMe.Controllers;
 
+import com.TreeForMe.Models.Conversation;
 import com.TreeForMe.Models.Plant;
 import com.TreeForMe.Models.Message;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,8 @@ public class PlantInfoController {
     @GetMapping("discovery/getPlantSearchResult")
     public List<Plant> getPlantSearchResult(Message userMessage) {
         int userid = userMessage.getUser();
-        PlantInfo pi = AssistantService.getInstance().getConvos().get(userid).getPlantInfo();
+        Conversation currentConvo = AssistantService.getInstance().getConvos().get(userid);
+        PlantInfo pi = currentConvo.getPlantInfo();
         System.out.println(pi.getFlowers());
         System.out.println(pi.getHumidity());
         System.out.println(pi.getLight());
@@ -42,7 +44,7 @@ public class PlantInfoController {
 //            keywords.add(pi.getLight());
 //        }
 
-        List<Plant> plantResults = DiscoveryService.getInstance().getPlantNameFromFieldSearch(pi);
+        List<Plant> plantResults = DiscoveryService.getInstance().getPlantNameFromFieldSearch(currentConvo);
         return plantResults;
     }
 

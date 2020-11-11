@@ -15,6 +15,9 @@ public class Conversation {
     private boolean endConvo;
     private boolean finished;
 
+    private String oldQuery;
+    private List<Plant> oldBestPlants;
+
     private Map<String, IntentGroup> intentGroups;
 
     /* null if generic, corresponding intent group if specific */
@@ -176,4 +179,12 @@ public class Conversation {
         return finished;
     }
 
+    public String getOldQuery() { return oldQuery; }
+    public void setOldQuery(String oldQuery) {
+        this.oldQuery = oldQuery;
+    }
+    public List<Plant> getOldBestPlants() { return oldBestPlants; }
+    public void setOldBestPlants(List<Plant> oldBestPlants) {
+        this.oldBestPlants = oldBestPlants;
+    }
 }
