@@ -47,7 +47,7 @@ public class Conversation {
             String name = intent.getName();
             double confidence = intent.getConfidence();
 
-            if (confidence > LOWEST_CONFIDENCE && confidence > primaryIntentConfidence) {
+            if (confidence > LOWEST_CONFIDENCE && confidence > primaryIntentConfidence && (IntentInfo.lightIntents.contains(name) || IntentInfo.humidityIntents.contains(name) || IntentInfo.lightIntents.contains(name))) {
                 primaryIntentConfidence = confidence;
                 primaryIntentName = name;
             }
