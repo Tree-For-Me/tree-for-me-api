@@ -41,8 +41,8 @@ public final class IntentInfo {
         lightIntentQuestions.add("What kind of light do you think your plants will get?");
         intentGroups.put("light", new IntentGroup(lightIntents, lightIntentQuestions));
         List<String> flowerIntentQuestions = new ArrayList<String>();
-        flowerIntentQuestions.add("Do you want flowers on your plant? Or would you prefer just foliage?");
-        flowerIntentQuestions.add("Would you like flowers or no flowers on your plant?");
+        flowerIntentQuestions.add("Do you want flowers on your plant? Or would you prefer just foliage? Perhaps a cactus or succulent?");
+        flowerIntentQuestions.add("Would you like flowers or just leaves on your plant? Or even something spiky like a cactus?");
         intentGroups.put("flower", new IntentGroup(flowerIntents, flowerIntentQuestions));
         List<String> humidityIntentQuestions = new ArrayList<String>();
         humidityIntentQuestions.add("Describe the humidity in your area.");
