@@ -4,6 +4,7 @@ import com.TreeForMe.Models.AssistantResponse;
 import com.TreeForMe.Models.Message;
 import com.TreeForMe.Shared.AssistantService;
 import com.TreeForMe.Shared.DiscoveryService;
+import com.TreeForMe.Shared.TwitterService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +16,12 @@ public class Greeting {
 
     public Greeting(long id, String content) {
         this.id = id;
-
-        AssistantService as = AssistantService.getInstance();
-        AssistantResponse ar = as.getResponse("it is bright in here and very humid");
-        for(AssistantResponse.Intent intent : ar.getIntents()) {
-            System.out.println(intent.getName());
-            System.out.println(intent.getConfidence());
-        }
-
         this.content = "";
+
+        TwitterService ts = TwitterService.getInstance();
+        String tweets = ts.getUserTweetText("preskmjohnson");
+
+        System.out.println(tweets);
     }
 
     public long getId() {
