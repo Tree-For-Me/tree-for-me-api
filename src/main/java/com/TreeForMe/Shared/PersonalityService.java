@@ -1,0 +1,66 @@
+package com.TreeForMe.Shared;
+
+import com.google.common.io.Resources;
+import com.google.gson.stream.JsonReader;
+import com.ibm.cloud.sdk.core.security.IamAuthenticator;
+import com.ibm.cloud.sdk.core.util.GsonSingleton;
+
+import com.ibm.watson.personality_insights.v3.PersonalityInsights;
+import com.ibm.watson.personality_insights.v3.model.Content;
+import com.ibm.watson.personality_insights.v3.model.Profile;
+import com.ibm.watson.personality_insights.v3.model.ProfileOptions;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+
+public final class PersonalityService {
+
+    private static PersonalityService personalityService;
+
+    private PersonalityInsights personalityInsights;
+
+    private final String apiKey = "TONAML8VZYkZnnFDl34sfzBPo3FZaWTt9tedB-1SvR80";
+    private final String version = "2020-11-19";
+    private final String serviceUrl = "https://api.us-south.personality-insights.watson.cloud.ibm.com/instances/b2882aa6-3181-488f-8f65-ba783aa72f68";
+
+    private PersonalityService() {
+        IamAuthenticator authenticator = new IamAuthenticator(apiKey);
+        personalityInsights = new PersonalityInsights(version, authenticator);
+        personalityInsights.setServiceUrl(serviceUrl);
+    }
+
+    public Profile getPersonalityProfile(String text) {
+        Profile profile = null;
+        try {
+            // Text to analyze
+            String filename = "src/main/resources/test-profile.json";
+            JsonReader jsonReader = new JsonReader(new FileReader(filename));
+            Content content = GsonSingleton.getGson().fromJson(jsonReader, Content.class);
+
+            ProfileOptions profileOptions = new ProfileOptions.Builder()
+                    .content(content)
+                    .consumptionPreferences(true)
+                    .rawScores(true)
+                    .build();
+
+            profile = personalityInsights.profile(profileOptions).execute().getResult();
+            System.out.println(profile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return profile;
+    }
+
+    public static PersonalityService getInstance() {
+        if (personalityService == null) {
+            personalityService = new PersonalityService();
+        }
+
+        return personalityService;
+    }
+}

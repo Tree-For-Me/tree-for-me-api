@@ -4,7 +4,9 @@ import com.TreeForMe.Models.AssistantResponse;
 import com.TreeForMe.Models.Message;
 import com.TreeForMe.Shared.AssistantService;
 import com.TreeForMe.Shared.DiscoveryService;
+import com.TreeForMe.Shared.PersonalityService;
 import com.TreeForMe.Shared.TwitterService;
+import com.ibm.watson.personality_insights.v3.model.Profile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,10 @@ public class Greeting {
         String tweets = ts.getUserTweetText("preskmjohnson");
 
         System.out.println(tweets);
+
+        PersonalityService ps = PersonalityService.getInstance();
+        Profile profile = ps.getPersonalityProfile("");
+
     }
 
     public long getId() {
