@@ -94,7 +94,7 @@ public final class AssistantService {
             // make a new assistant service session and new plantInfo object
             convos.put(userid, new Conversation());
 
-            returnMessage = "Welcome to Tree For Me. I'm going to help you find the perfect plant!\nTell me something about the plant you're looking for or the environment it will be in. For now, you can talk about humidity, flowers, or sunlight!";
+            returnMessage = "Welcome to Tree For Me. I'm going to help you find the perfect plant!\nTell me something about the plant you're looking for or the environment it will be in. As an example, you can talk about humidity, flowers, or sunlight!";
         }
         else {
             // ensure userid is valid

@@ -56,9 +56,9 @@ public final class IntentInfo {
     static {
         genericResponses = new ArrayList<String>();
         genericResponses.add("\nTell me something about the plant you're looking for or " +
-                "the environment it will be in. For now, you can talk about humidity, flowers, or sunlight!");
+                "the environment it will be in - something along the lines of humidity, flowers, or sunlight!");
         genericResponses.add("\nTell me about what kind of plant you want or " +
-                "the type of environment it will be in. You can talk about humidity, flowers, or sunlight!");
+                "the type of environment it will be in. I suggest you talk about humidity, flowers, or sunlight!");
 
         convoOverResponses = new ArrayList<String>();
         convoOverResponses.add("\nLet's find you the perfect plant...");

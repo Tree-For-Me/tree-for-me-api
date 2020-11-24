@@ -23,7 +23,7 @@ public class Conversation {
     /* null if generic, corresponding intent group if specific */
     private IntentGroup previousQuestion;
 
-    private static final double LOWEST_CONFIDENCE = .3;
+    private static final double LOWEST_CONFIDENCE = .45;
     private Random random;
 
     public Conversation() {
