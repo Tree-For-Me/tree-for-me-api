@@ -134,6 +134,24 @@ public final class DiscoveryService {
         return bestPlants;
     }
 
+    public Plant getPlantFromBotanicalName(String name) {
+        String query = "botanical_name:\"" + name + "\"";
+        List<QueryResult> qrs = runQuery(query.toString());
+
+        if (qrs.isEmpty()) {
+            return null;
+        }
+
+        QueryResult bestRes = qrs.get(0);
+
+        String plantName = (String) bestRes.get("page_title");
+        String imageLink = (String) bestRes.get("image");
+        String botName = (String) bestRes.get("botanical_name");
+        String careLink = (String) bestRes.get("link");
+
+        return new Plant(plantName, imageLink, botName, careLink);
+    }
+
     public static DiscoveryService getInstance() {
         if (discoveryService == null) {
             discoveryService = new DiscoveryService();
