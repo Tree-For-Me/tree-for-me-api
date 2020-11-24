@@ -3,6 +3,7 @@ package com.TreeForMe.Shared;
 import com.google.common.io.Resources;
 import com.google.gson.stream.JsonReader;
 import com.ibm.cloud.sdk.core.security.IamAuthenticator;
+import com.ibm.cloud.sdk.core.service.exception.BadRequestException;
 import com.ibm.cloud.sdk.core.util.GsonSingleton;
 
 import com.ibm.watson.personality_insights.v3.PersonalityInsights;
@@ -44,8 +45,10 @@ public final class PersonalityService {
 
             profile = personalityInsights.profile(profileOptions).execute().getResult();
             System.out.println(profile);
-        } catch (IllegalArgumentException e) {
+        } catch (BadRequestException e) {
             e.printStackTrace();
+            // User input was less than 100 words so the IBM service threw an error, return something?
+            System.out.println("Number of words from tweets was less than 100, cannot retrieve output.");
         }
 
         return profile;
