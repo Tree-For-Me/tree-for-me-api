@@ -26,7 +26,7 @@ public class Greeting {
         System.out.println(tweets);
 
         PersonalityService ps = PersonalityService.getInstance();
-        Profile profile = ps.getPersonalityProfile("");
+        Profile profile = ps.getPersonalityProfile(tweets);
 
     }
 

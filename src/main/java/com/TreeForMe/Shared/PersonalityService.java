@@ -36,20 +36,15 @@ public final class PersonalityService {
     public Profile getPersonalityProfile(String text) {
         Profile profile = null;
         try {
-            // Text to analyze
-            String filename = "src/main/resources/test-profile.json";
-            JsonReader jsonReader = new JsonReader(new FileReader(filename));
-            Content content = GsonSingleton.getGson().fromJson(jsonReader, Content.class);
-
             ProfileOptions profileOptions = new ProfileOptions.Builder()
-                    .content(content)
+                    .text(text)
                     .consumptionPreferences(true)
                     .rawScores(true)
                     .build();
 
             profile = personalityInsights.profile(profileOptions).execute().getResult();
             System.out.println(profile);
-        } catch (FileNotFoundException e) {
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
 
