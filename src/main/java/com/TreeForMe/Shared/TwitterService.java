@@ -40,7 +40,7 @@ public final class TwitterService {
 
     public String getUserTweetText(String userHandle) {
         Query query = new Query("from:" + userHandle);
-        query.setCount(20);
+        query.setCount(100);
         QueryResult result = null;
         try {
             result = twitter.search(query);

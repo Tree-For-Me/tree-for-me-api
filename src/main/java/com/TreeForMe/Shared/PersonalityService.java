@@ -44,9 +44,9 @@ public final class PersonalityService {
                     .build();
 
             profile = personalityInsights.profile(profileOptions).execute().getResult();
-            System.out.println(profile);
+            //System.out.println(profile);
         } catch (BadRequestException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             // User input was less than 100 words so the IBM service threw an error, return something?
             System.out.println("Number of words from tweets was less than 100, cannot retrieve output.");
         }

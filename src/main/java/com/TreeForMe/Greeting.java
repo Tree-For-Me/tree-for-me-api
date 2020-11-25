@@ -2,6 +2,8 @@ package com.TreeForMe;
 
 import com.TreeForMe.Models.AssistantResponse;
 import com.TreeForMe.Models.Message;
+import com.TreeForMe.Models.Personality;
+import com.TreeForMe.Models.Plant;
 import com.TreeForMe.Shared.AssistantService;
 import com.TreeForMe.Shared.DiscoveryService;
 import com.TreeForMe.Shared.PersonalityService;
@@ -21,12 +23,22 @@ public class Greeting {
         this.content = "";
 
         TwitterService ts = TwitterService.getInstance();
-        String tweets = ts.getUserTweetText("preskmjohnson");
+        //String tweets = ts.getUserTweetText("preskmjohnson");
+        String tweets = ts.getUserTweetText("barackobama");
 
         System.out.println(tweets);
 
         PersonalityService ps = PersonalityService.getInstance();
-        Profile profile = ps.getPersonalityProfile("ass");
+        Profile profile = ps.getPersonalityProfile(tweets);
+
+        if(profile == null) {
+            System.out.println("No can do, buckaroo!");
+        }
+        else {
+            Plant presidentialPlant = new Personality(profile).getClosestPlant();
+            System.out.println(presidentialPlant.getCareLink());
+        }
+
 
     }
 
