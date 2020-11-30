@@ -15,12 +15,15 @@ public class Conversation {
     private boolean endConvo;
     private boolean finished;
 
+    private String oldQuery;
+    private List<Plant> oldBestPlants;
+
     private Map<String, IntentGroup> intentGroups;
 
     /* null if generic, corresponding intent group if specific */
     private IntentGroup previousQuestion;
 
-    private static final double LOWEST_CONFIDENCE = .3;
+    private static final double LOWEST_CONFIDENCE = .45;
     private Random random;
 
     public Conversation() {
@@ -44,7 +47,7 @@ public class Conversation {
             String name = intent.getName();
             double confidence = intent.getConfidence();
 
-            if (confidence > LOWEST_CONFIDENCE && confidence > primaryIntentConfidence) {
+            if (confidence > LOWEST_CONFIDENCE && confidence > primaryIntentConfidence && (IntentInfo.lightIntents.contains(name) || IntentInfo.humidityIntents.contains(name) || IntentInfo.flowerIntents.contains(name))) {
                 primaryIntentConfidence = confidence;
                 primaryIntentName = name;
             }
@@ -176,4 +179,12 @@ public class Conversation {
         return finished;
     }
 
+    public String getOldQuery() { return oldQuery; }
+    public void setOldQuery(String oldQuery) {
+        this.oldQuery = oldQuery;
+    }
+    public List<Plant> getOldBestPlants() { return oldBestPlants; }
+    public void setOldBestPlants(List<Plant> oldBestPlants) {
+        this.oldBestPlants = oldBestPlants;
+    }
 }
