@@ -60,7 +60,7 @@ public class Personality {
         plantPersonalities = new ArrayList<>();
 
         // Obtain list of files in path
-        File[] files = new File("src/main/resources/plant_personalities").listFiles();
+        File[] files = new File("src/main/resources/plant_personalities_normalized").listFiles();
         if(files == null) {
             return;
         }
@@ -91,19 +91,19 @@ public class Personality {
                 String traitId = (String) trait.get("trait_id");
 
                 if(traitId.equals("big5_openness")) {
-                    openness = (double) trait.get("percentile");
+                    openness = Double.parseDouble((String) trait.get("normalized_score"));
                 }
                 else if(traitId.equals("big5_conscientiousness")) {
-                    conscientiousness = (double) trait.get("percentile");
+                    conscientiousness = Double.parseDouble((String) trait.get("normalized_score"));
                 }
                 else if(traitId.equals("big5_extraversion")) {
-                    extraversion = (double) trait.get("percentile");
+                    extraversion = Double.parseDouble((String) trait.get("normalized_score"));
                 }
                 else if(traitId.equals("big5_agreeableness")) {
-                    agreeableness = (double) trait.get("percentile");
+                    agreeableness = Double.parseDouble((String) trait.get("normalized_score"));
                 }
                 else if(traitId.equals("big5_neuroticism")) {
-                    neuroticism = (double) trait.get("percentile");
+                    neuroticism = Double.parseDouble((String) trait.get("normalized_score"));
                 }
             }
 
