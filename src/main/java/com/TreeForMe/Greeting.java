@@ -35,7 +35,7 @@ public class Greeting {
             System.out.println("No can do, buckaroo!");
         }
         else {
-            Plant presidentialPlant = new Personality(profile).getClosestPlant();
+            Plant presidentialPlant = Personality.getPlantFromPersonality(new Personality(profile).getClosestPlant());
             System.out.println(presidentialPlant.getCareLink());
         }
 

@@ -29,7 +29,7 @@ public class PersonalityController {
         String twitterText = TwitterService.getInstance().getUserTweetText(userMessage.getMessageContent());
         Profile twitterProfile = PersonalityService.getInstance().getPersonalityProfile(twitterText);
         Personality twitterPersonality = new Personality(twitterProfile);
-        Plant bestPlant = twitterPersonality.getClosestPlant();
+        Plant bestPlant = Personality.getPlantFromPersonality(twitterPersonality.getClosestPlant());
         return ResponseEntity.ok(bestPlant);
     }
 
@@ -38,7 +38,7 @@ public class PersonalityController {
     public ResponseEntity<Plant> getTextPersonality(Message userMessage) {
         Profile textProfile = PersonalityService.getInstance().getPersonalityProfile(userMessage.getMessageContent());
         Personality textPersonality = new Personality(textProfile);
-        Plant bestPlant = textPersonality.getClosestPlant();
+        Plant bestPlant = Personality.getPlantFromPersonality(textPersonality.getClosestPlant());
         return ResponseEntity.ok(bestPlant);
     }
 }

@@ -111,7 +111,7 @@ public class Personality {
         }
     }
 
-    public Plant getClosestPlant() {
+    public Personality getClosestPlant() {
         if(plantPersonalities == null) {
             loadPlantPersonalities();
         }
@@ -135,20 +135,24 @@ public class Personality {
             }
         }
 
+        return closest;
+    }
+
+    public static Plant getPlantFromPersonality(Personality p) {
         // replace underscores with spaces
-        String botName = closest.getName().replace('_', ' ');
+        String botName = p.getName().replace('_', ' ');
 
         //returns null if no plant was found
         return DiscoveryService.getInstance().getPlantFromBotanicalName(botName);
     }
 
 
-    String getName() {return this.name;}
-    double getOpenness() {return this.openness;}
-    double getConscientiousness() {return this.conscientiousness;}
-    double getExtraversion() {return this.extraversion;}
-    double getAgreeableness() {return this.agreeableness;}
-    double getNeuroticism() {return this.neuroticism;}
+    public String getName() {return this.name;}
+    public double getOpenness() {return this.openness;}
+    public double getConscientiousness() {return this.conscientiousness;}
+    public double getExtraversion() {return this.extraversion;}
+    public double getAgreeableness() {return this.agreeableness;}
+    public double getNeuroticism() {return this.neuroticism;}
 
 
 }
