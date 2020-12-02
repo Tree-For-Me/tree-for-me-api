@@ -28,8 +28,12 @@ public class PersonalityController {
     public ResponseEntity<Plant> getTwitterPersonality(Message userMessage) {
         String twitterText = TwitterService.getInstance().getUserTweetText(userMessage.getMessageContent());
         Profile twitterProfile = PersonalityService.getInstance().getPersonalityProfile(twitterText);
+        if (twitterProfile == null) { return null; } // Check fewer than 100 words
         Personality twitterPersonality = new Personality(twitterProfile);
-        Plant bestPlant = Personality.getPlantFromPersonality(twitterPersonality.getClosestPlant());
+        Personality plantPersonality = twitterPersonality.getClosestPlant();
+        Plant bestPlant = Personality.getPlantFromPersonality(plantPersonality);
+        bestPlant.plantPersonality = plantPersonality;
+        bestPlant.userPersonality = twitterPersonality;
         return ResponseEntity.ok(bestPlant);
     }
 
@@ -37,8 +41,12 @@ public class PersonalityController {
     @GetMapping("personality/getTextPersonality")
     public ResponseEntity<Plant> getTextPersonality(Message userMessage) {
         Profile textProfile = PersonalityService.getInstance().getPersonalityProfile(userMessage.getMessageContent());
+        if (textProfile == null) { return null; } // Check fewer than 100 words
         Personality textPersonality = new Personality(textProfile);
-        Plant bestPlant = Personality.getPlantFromPersonality(textPersonality.getClosestPlant());
+        Personality plantPersonality = textPersonality.getClosestPlant();
+        Plant bestPlant = Personality.getPlantFromPersonality(plantPersonality);
+        bestPlant.plantPersonality = plantPersonality;
+        bestPlant.userPersonality = textPersonality;
         return ResponseEntity.ok(bestPlant);
     }
 }

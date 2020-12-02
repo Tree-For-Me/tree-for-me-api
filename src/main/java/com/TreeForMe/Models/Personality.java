@@ -1,6 +1,7 @@
 package com.TreeForMe.Models;
 
 import com.TreeForMe.Shared.DiscoveryService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ibm.watson.personality_insights.v3.model.Profile;
 import com.ibm.watson.personality_insights.v3.model.Trait;
 import org.json.simple.JSONArray;
@@ -23,6 +24,7 @@ public class Personality {
     private double agreeableness;
     private double neuroticism;
 
+    @JsonIgnore
     private static List<Personality> plantPersonalities = null;
 
     private Personality(String name, double openness, double conscientiousness, double extraversion, double agreeableness, double neuroticism) {
@@ -111,6 +113,7 @@ public class Personality {
         }
     }
 
+    @JsonIgnore
     public Personality getClosestPlant() {
         if(plantPersonalities == null) {
             loadPlantPersonalities();
@@ -138,6 +141,7 @@ public class Personality {
         return closest;
     }
 
+    @JsonIgnore
     public static Plant getPlantFromPersonality(Personality p) {
         // replace underscores with spaces
         String botName = p.getName().replace('_', ' ');

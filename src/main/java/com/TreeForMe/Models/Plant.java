@@ -6,12 +6,16 @@ public class Plant {
     private String imageLink;
     private String botName;
     private String careLink;
+    public Personality plantPersonality;
+    public Personality userPersonality;
 
     public Plant(String plantName, String imageLink, String botName, String careLink) {
         this.plantName = plantName;
         this.imageLink = imageLink;
         this.botName = botName;
         this.careLink = careLink;
+        plantPersonality = null;
+        userPersonality = null;
     }
 
     public String getPlantName() {
